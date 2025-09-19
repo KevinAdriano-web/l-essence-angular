@@ -1,0 +1,53 @@
+<!-- Header simplificado do carrinho -->
+<header>
+  <div class="logo">
+    <a routerLink="/">
+      <img src="assets/media/Logo/Logo(Sem_nome).png" alt="Logo L'ESSENCE PERFUMARIA" style="width: 100px; height: auto;">
+      <h3>L'ESSENCE PERFUMARIA</h3>
+    </a>
+  </div>
+  <span class="material-symbols-outlined back-button" routerLink="/">
+    arrow_back
+  </span>
+</header>
+
+<!-- Conteúdo principal -->
+<main>
+  <!-- Seção do Carrinho -->
+  <section class="cart">
+    <h2>Itens no Carrinho</h2>
+    @if (cartItems.length > 0) {
+      <ul>
+        @for (item of cartItems; track item.id) {
+          <li>
+            <img [src]="item.image" [alt]="item.name">
+            <div class="product-info">
+              <h3>{{ item.name }}</h3>
+              <p>{{ item.description }}</p>
+              <p class="price">R$ {{ formatPrice(item.price) }}</p>
+            </div>
+            <button class="remove-button" (click)="removeFromCart(item)">
+              <span class="material-symbols-outlined">delete</span>
+            </button>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="empty-cart">Não há itens no carrinho</p>
+    }
+  </section>
+
+  <!-- Seção de Checkout -->
+  <section class="checkout">
+    <h2>Checkout</h2>
+    <p>Total do Carrinho: <span class="cart-total">R$ {{ formatPrice(getTotal()) }}</span></p>
+    <button class="checkout-button" [disabled]="cartItems.length === 0" (click)="finishPurchase()">
+      Finalizar Compra
+    </button>
+  </section>
+</main>
+
+<!-- Rodapé -->
+<div class="footer">
+  <p>&copy; 2025 L'ESSENCE PERFUMARIA. Todos os direitos reservados. Desenvolvido por Grupo PHOENIX</p>
+</div>

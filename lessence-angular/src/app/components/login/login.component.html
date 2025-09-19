@@ -1,0 +1,60 @@
+<div class="container">
+    <div class="content first-content">
+        <div class="first-column">
+            <h2 class="title title-primary">bem vindo de volta!</h2>
+            <p class="description description-primary">Para se manter conectado conosco</p>
+            <p class="description description-primary">por favor faça login com suas informações pessoais</p>
+            <button routerLink="/register" class="btn btn-primary">cadastrar</button>
+        </div>
+        <div class="second-column">
+            <h2 class="title title-second">Login</h2>
+            <p class="description description-second">use sua conta de e-mail:</p>
+            
+            <form class="form" (ngSubmit)="onLogin()" #loginForm="ngForm">
+                <label class="label-input">
+                    <i class="far fa-envelope icon-modify"></i>
+                    <input 
+                        type="email" 
+                        name="email"
+                        [(ngModel)]="loginData.email"
+                        placeholder="Email" 
+                        required 
+                        email
+                        #email="ngModel">
+                </label>
+                <div class="error-message" *ngIf="email.invalid && email.touched">
+                    <span *ngIf="email.errors?.['required']">E-mail é obrigatório</span>
+                    <span *ngIf="email.errors?.['email']">E-mail inválido</span>
+                </div>
+
+                <label class="label-input">
+                    <i class="fas fa-lock icon-modify"></i>
+                    <input 
+                        type="password" 
+                        name="password"
+                        [(ngModel)]="loginData.password"
+                        placeholder="Senha" 
+                        required
+                        minlength="6"
+                        #password="ngModel">
+                </label>
+                <div class="error-message" *ngIf="password.invalid && password.touched">
+                    <span *ngIf="password.errors?.['required']">Senha é obrigatória</span>
+                    <span *ngIf="password.errors?.['minlength']">Senha deve ter pelo menos 6 caracteres</span>
+                </div>
+
+                <button type="submit" class="btn btn-second" [disabled]="loginForm.invalid || isLoading">
+                    <span *ngIf="!isLoading">Entrar</span>
+                    <span *ngIf="isLoading">Entrando...</span>
+                </button>
+
+                <div class="error-message" *ngIf="errorMessage">
+                    {{ errorMessage }}
+                </div>
+                <div class="success-message" *ngIf="successMessage">
+                    {{ successMessage }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

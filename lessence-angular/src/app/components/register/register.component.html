@@ -1,0 +1,88 @@
+<div class="container">
+    <div class="content first-content">
+        <div class="first-column">
+            <h2 class="title title-primary">olá</h2>
+            <p class="description description-primary">Insira seus dados pessoais</p>
+            <p class="description description-primary">e comece sua jornada conosco</p>
+            <button routerLink="/login" class="btn btn-primary">entrar</button>
+        </div>
+        <div class="second-column">
+            <h2 class="title title-second">Criar Conta</h2>
+            <p class="description description-second">use seu e-mail para registro:</p>
+            
+            <form class="form" (ngSubmit)="onRegister()" #registerForm="ngForm">
+                <label class="label-input">
+                    <i class="far fa-user icon-modify"></i>
+                    <input 
+                        type="text" 
+                        name="name"
+                        [(ngModel)]="registerData.name"
+                        placeholder="Nome" 
+                        required
+                        #name="ngModel">
+                </label>
+                <div class="error-message" *ngIf="name.invalid && name.touched">
+                    <span *ngIf="name.errors?.['required']">Nome é obrigatório</span>
+                </div>
+
+                <label class="label-input">
+                    <i class="far fa-envelope icon-modify"></i>
+                    <input 
+                        type="email" 
+                        name="email"
+                        [(ngModel)]="registerData.email"
+                        placeholder="Email" 
+                        required 
+                        email
+                        #email="ngModel">
+                </label>
+                <div class="error-message" *ngIf="email.invalid && email.touched">
+                    <span *ngIf="email.errors?.['required']">E-mail é obrigatório</span>
+                    <span *ngIf="email.errors?.['email']">E-mail inválido</span>
+                </div>
+
+                <label class="label-input">
+                    <i class="fas fa-lock icon-modify"></i>
+                    <input 
+                        type="password" 
+                        name="password"
+                        [(ngModel)]="registerData.password"
+                        placeholder="Senha" 
+                        required 
+                        minlength="6"
+                        #password="ngModel">
+                </label>
+                <div class="error-message" *ngIf="password.invalid && password.touched">
+                    <span *ngIf="password.errors?.['required']">Senha é obrigatória</span>
+                    <span *ngIf="password.errors?.['minlength']">Senha deve ter pelo menos 6 caracteres</span>
+                </div>
+
+                <label class="label-input">
+                    <i class="fas fa-lock icon-modify"></i>
+                    <input 
+                        type="password" 
+                        name="confirmPassword"
+                        [(ngModel)]="registerData.confirmPassword"
+                        placeholder="Confirmar Senha" 
+                        required
+                        #confirmPassword="ngModel">
+                </label>
+                <div class="error-message" *ngIf="confirmPassword.invalid && confirmPassword.touched">
+                    <span *ngIf="confirmPassword.errors?.['required']">Confirmação de senha é obrigatória</span>
+                </div>
+
+                <button type="submit" class="btn btn-second" [disabled]="registerForm.invalid || isLoading">
+                    <span *ngIf="!isLoading">Cadastrar</span>
+                    <span *ngIf="isLoading">Cadastrando...</span>
+                </button>
+
+                <div class="error-message" *ngIf="errorMessage">
+                    {{ errorMessage }}
+                </div>
+                <div class="success-message" *ngIf="successMessage">
+                    {{ successMessage }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,51 @@
+<header>
+  <div class="header">
+    <!-- Logo -->
+    <div class="logo" (click)="navigateToHome()">
+      <img src="assets/media/Icone/perfumed.png" alt="Logo L'ESSENCE PERFUMARIA">
+      <h3>L'ESSENCE PERFUMARIA</h3>
+    </div>
+
+    <!-- Formulário de Busca -->
+    <form class="search-form" (ngSubmit)="onSearch()">
+      <input type="text" [(ngModel)]="searchQuery" name="search" placeholder="Buscar produtos...">
+      <button type="submit">Buscar</button>
+    </form>
+
+    <!-- Seção Direita: Autenticação + Carrinho -->
+    <div class="right-section">
+      <!-- Seção de Autenticação -->
+      <div class="auth-section">
+        @if (userName) {
+          <span class="user-name">Olá, {{ userName }}!</span>
+          <button class="logout-button" (click)="logout()">Sair</button>
+        } @else {
+          <button class="auth-button" (click)="navigateToLogin()">Entrar</button>
+        }
+      </div>
+
+      <!-- Ícone do Carrinho -->
+      <div class="cart-icon" (click)="navigateToCart()">
+        <span class="material-symbols-outlined">
+          shopping_bag
+        </span>
+        <span class="cart-count" *ngIf="cartCount > 0">
+          {{ cartCount }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menu de Categorias -->
+  <nav class="menu">
+    <ul class="categories">
+      @for (cat of categories; track cat) {
+        <li class="category" 
+            [class.active]="selectedCategory === cat"
+            (click)="selectCategory(cat)">
+          {{ cat }}
+        </li>
+      }
+    </ul>
+  </nav>
+</header>
