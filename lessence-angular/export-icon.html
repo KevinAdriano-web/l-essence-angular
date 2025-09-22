@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exportar Ícone do Carrinho</title>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <style>
+        body {
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        
+        .icon-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            padding: 20px;
+            color: #333;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+        }
+        
+        .material-symbols-outlined {
+            font-size: 48px;
+            color: #333;
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: #007cc9;
+            color: white;
+            font-size: 16px;
+            padding: 4px 8px;
+            border-radius: 50%;
+            font-weight: bold;
+        }
+        
+        .instructions {
+            text-align: center;
+            max-width: 400px;
+            line-height: 1.6;
+        }
+        
+        .size-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .size-btn {
+            padding: 8px 16px;
+            border: 1px solid #007cc9;
+            background: white;
+            color: #007cc9;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .size-btn:hover {
+            background: #007cc9;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="icon-container">
+        <h2>Ícone do Carrinho - L'Essence Perfumaria</h2>
+        
+        <div class="cart-icon" id="cartIcon">
+            <span class="material-symbols-outlined" id="icon">
+                shopping_bag
+            </span>
+            <span class="cart-count" id="cartCount">3</span>
+        </div>
+        
+        <div class="size-options">
+            <button class="size-btn" onclick="changeSize(24)">24px</button>
+            <button class="size-btn" onclick="changeSize(32)">32px</button>
+            <button class="size-btn" onclick="changeSize(48)">48px</button>
+            <button class="size-btn" onclick="changeSize(64)">64px</button>
+            <button class="size-btn" onclick="changeSize(96)">96px</button>
+        </div>
+        
+        <div class="instructions">
+            <h3>Como exportar:</h3>
+            <ol>
+                <li>Escolha o tamanho desejado acima</li>
+                <li>Clique com o botão direito no ícone</li>
+                <li>Selecione "Salvar imagem como..." ou "Copiar imagem"</li>
+                <li>Salve como PNG</li>
+            </ol>
+            
+            <p><strong>Dica:</strong> Para melhor qualidade, use o tamanho maior e redimensione depois se necessário.</p>
+        </div>
+    </div>
+
+    <script>
+        function changeSize(size) {
+            const icon = document.getElementById('icon');
+            icon.style.fontSize = size + 'px';
+            
+            // Ajustar o padding do container
+            const container = document.getElementById('cartIcon');
+            container.style.padding = (size / 2) + 'px';
+        }
+    </script>
+</body>
+</html>

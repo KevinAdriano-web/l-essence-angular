@@ -10,6 +10,7 @@ import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
 import { CategoryService } from '../../services/category.service';
 import { SearchService } from '../../services/search.service';
+import { NotificationService } from '../../services/notification.service';
 import { Product } from '../../interfaces/product.interface';
 import { Subscription } from 'rxjs';
 
@@ -172,7 +173,8 @@ export class ProductsComponent implements OnInit, OnDestroy {
     private productService: ProductService,
     private cartService: CartService,
     private categoryService: CategoryService,
-    private searchService: SearchService
+    private searchService: SearchService,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit() {
@@ -248,10 +250,15 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   addToCart(product: Product): void {
-    if (this.cartService.addToCart(product)) {
-      alert('Produto adicionado ao carrinho!');
-    } else {
-      alert('Produto já está no carrinho!');
+    try {
+      if (this.cartService.addToCart(product)) {
+        this.notificationService.success('Produto adicionado ao carrinho!');
+      } else {
+        this.notificationService.warning('Produto já está no carrinho!');
+      }
+    } catch (error) {
+      console.error('Erro ao adicionar produto ao carrinho:', error);
+      this.notificationService.error('Erro ao adicionar produto ao carrinho');
     }
   }
 

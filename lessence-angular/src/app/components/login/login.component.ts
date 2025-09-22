@@ -48,6 +48,13 @@ export class LoginComponent implements OnInit {
       return;
     }
 
+    // Validação de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(this.loginData.email)) {
+      this.errorMessage = 'Por favor, insira um email válido';
+      return;
+    }
+
     this.isLoading = true;
     this.errorMessage = '';
     this.successMessage = '';
@@ -63,7 +70,8 @@ export class LoginComponent implements OnInit {
         this.errorMessage = 'Email ou senha incorretos';
       }
     } catch (error) {
-      this.errorMessage = 'Erro ao fazer login. Tente novamente.';
+      console.error('Erro no login:', error);
+      this.errorMessage = error instanceof Error ? error.message : 'Erro ao fazer login. Tente novamente.';
     } finally {
       this.isLoading = false;
     }

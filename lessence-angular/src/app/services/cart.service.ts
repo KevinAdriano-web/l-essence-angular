@@ -1,6 +1,7 @@
 import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import { Product } from '../interfaces/product.interface';
 
 @Injectable({
@@ -18,26 +19,41 @@ export class CartService {
 
   private loadCart(): void {
     if (isPlatformBrowser(this.platformId)) {
-      const items = sessionStorage.getItem('items');
-      if (items) {
-        this.cartItems = JSON.parse(items);
-        this.cartSubject.next(this.cartItems);
+      try {
+        const items = sessionStorage.getItem('items');
+        if (items) {
+          this.cartItems = JSON.parse(items);
+          this.cartSubject.next([...this.cartItems]);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar carrinho:', error);
+        this.cartItems = [];
+        this.cartSubject.next([]);
       }
     }
   }
 
   private saveCart(): void {
     if (isPlatformBrowser(this.platformId)) {
-      sessionStorage.setItem('items', JSON.stringify(this.cartItems));
-      this.cartSubject.next(this.cartItems);
+      try {
+        sessionStorage.setItem('items', JSON.stringify(this.cartItems));
+        this.cartSubject.next([...this.cartItems]);
+      } catch (error) {
+        console.error('Erro ao salvar carrinho:', error);
+      }
     }
   }
 
-  getCart() {
+  getCart(): Observable<Product[]> {
     return this.cartSubject.asObservable();
   }
 
   addToCart(product: Product): boolean {
+    if (!product || !product.id) {
+      console.error('Produto inválido fornecido');
+      return false;
+    }
+    
     if (!this.isInCart(product.id)) {
       this.cartItems.push({ ...product, quantity: 1 });
       this.saveCart();

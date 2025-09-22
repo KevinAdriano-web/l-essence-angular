@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
@@ -7,6 +7,8 @@ import { AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
 import { CategoryService } from '../../services/category.service';
 import { SearchService } from '../../services/search.service';
+import { Subject, combineLatest } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-header',
@@ -15,19 +17,13 @@ import { SearchService } from '../../services/search.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   searchQuery: string = '';
   userName: string | null = null;
   cartCount: number = 0;
-  categories: string[] = [
-    'Todos',
-    'Masculino',
-    'Feminino',
-    'Cítrico',
-    'Amadeirado',
-    'Floral'
-  ];
+  categories: string[] = [];
   selectedCategory: string | null = null;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private router: Router,
@@ -38,18 +34,17 @@ export class HeaderComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Inscrever-se nas mudanças do carrinho
-    this.cartService.getCart().subscribe(() => {
-      this.updateCartCount();
-    });
+    this.categories = this.categoryService.getCategories();
 
-    // Inscrever-se nas mudanças de autenticação e nome do usuário
-    this.authService.userName$.subscribe(userName => {
-      this.userName = userName || null;
-    });
-
-    // Inicializar contagem do carrinho
-    this.updateCartCount();
+    combineLatest([
+      this.cartService.getCart(),
+      this.authService.userName$
+    ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(([cartItems, userName]) => {
+        this.cartCount = cartItems.length;
+        this.userName = userName || null;
+      });
   }
 
   private updateCartCount(): void {
@@ -87,5 +82,10 @@ export class HeaderComponent implements OnInit {
   logout() {
     this.authService.logout();
     this.router.navigate(['/']);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

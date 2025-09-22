@@ -24,26 +24,43 @@ export class AuthService {
   }
 
   login(email: string, password: string): Promise<boolean> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        // Usuários de exemplo para demonstração
-        const users = [
-          { email: 'admin@lessence.com', password: 'admin123', name: 'Administrador' },
-          { email: 'user@lessence.com', password: 'user123', name: 'Usuário' },
-          { email: 'test@test.com', password: '123456', name: 'Teste' }
-        ];
+    return new Promise((resolve, reject) => {
+      // Validação básica
+      if (!email || !password) {
+        reject(new Error('Email e senha são obrigatórios'));
+        return;
+      }
 
-        const user = users.find(u => u.email === email && u.password === password);
-        const success = !!user;
-        
-        if (success && isPlatformBrowser(this.platformId)) {
-          const userName = user!.name;
-          localStorage.setItem('loggedInUser', email);
-          localStorage.setItem('userName', userName);
-          this.isLoggedInSubject.next(true);
-          this.userNameSubject.next(userName);
+      // Validação de email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        reject(new Error('Formato de email inválido'));
+        return;
+      }
+
+      setTimeout(() => {
+        try {
+          // Usuários de exemplo para demonstração
+          const users = [
+            { email: 'admin@lessence.com', password: 'admin123', name: 'Administrador' },
+            { email: 'user@lessence.com', password: 'user123', name: 'Usuário' },
+            { email: 'test@test.com', password: '123456', name: 'Teste' }
+          ];
+
+          const user = users.find(u => u.email === email && u.password === password);
+          const success = !!user;
+          
+          if (success && isPlatformBrowser(this.platformId)) {
+            const userName = user!.name;
+            localStorage.setItem('loggedInUser', email);
+            localStorage.setItem('userName', userName);
+            this.isLoggedInSubject.next(true);
+            this.userNameSubject.next(userName);
+          }
+          resolve(success);
+        } catch (error) {
+          reject(new Error('Erro interno do servidor'));
         }
-        resolve(success);
       }, 1000);
     });
   }

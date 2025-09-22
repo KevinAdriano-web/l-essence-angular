@@ -8,6 +8,7 @@ import { CartService } from './services/cart.service';
 import { ProductService } from './services/product.service';
 import { CategoryService } from './services/category.service';
 import { SearchService } from './services/search.service';
+import { NotificationService } from './services/notification.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,6 +19,7 @@ export const appConfig: ApplicationConfig = {
     CartService,
     ProductService,
     CategoryService,
-    SearchService
+    SearchService,
+    NotificationService
   ]
 };
