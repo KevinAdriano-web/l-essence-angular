@@ -47,12 +47,27 @@
                     <span *ngIf="!isLoading">Entrar</span>
                     <span *ngIf="isLoading">Entrando...</span>
                 </button>
+                
+                <!-- Botão de teste temporário -->
+                <button type="button" class="btn btn-test" (click)="testData()">
+                    Testar Dados (Console)
+                </button>
 
                 <div class="error-message" *ngIf="errorMessage">
                     {{ errorMessage }}
                 </div>
                 <div class="success-message" *ngIf="successMessage">
                     {{ successMessage }}
+                </div>
+                
+                <!-- Usuários de exemplo -->
+                <div class="example-users">
+                    <p><small>Usuários de exemplo:</small></p>
+                    <small>
+                        • admin&#64;lessence.com / admin123<br>
+                        • user&#64;lessence.com / user123<br>
+                        • test&#64;test.com / 123456
+                    </small>
                 </div>
             </form>
         </div>

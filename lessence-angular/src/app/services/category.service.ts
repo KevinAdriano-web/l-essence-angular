@@ -8,7 +8,7 @@ export class CategoryService {
   private selectedCategorySubject = new BehaviorSubject<string>('Todos');
   selectedCategory$ = this.selectedCategorySubject.asObservable();
 
-  readonly categories = ['Todos', 'Masculino', 'Feminino', 'Cítrico', 'Floral', 'Amadeirado', 'Doce'];
+  readonly categories = ['Todos', 'Masculino', 'Feminino', 'Cítrico', 'Floral', 'Amadeirado'];
 
   constructor() { }
 

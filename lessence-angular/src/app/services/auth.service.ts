@@ -16,17 +16,30 @@ export class AuthService {
     if (isPlatformBrowser(this.platformId)) {
       const loggedInUser = localStorage.getItem('loggedInUser');
       const userName = localStorage.getItem('userName');
-      if (loggedInUser) {
+      
+      console.log('AuthService inicializado:', { loggedInUser, userName });
+      
+      if (loggedInUser && userName) {
         this.isLoggedInSubject.next(true);
-        this.userNameSubject.next(userName || '');
+        this.userNameSubject.next(userName);
+        console.log('Usuário já está logado:', userName);
+      } else {
+        this.isLoggedInSubject.next(false);
+        this.userNameSubject.next('');
       }
     }
   }
 
   login(email: string, password: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
+      console.log('=== INÍCIO DO LOGIN ===');
+      console.log('Email recebido:', email);
+      console.log('Senha recebida:', password);
+      console.log('isPlatformBrowser:', isPlatformBrowser(this.platformId));
+      
       // Validação básica
       if (!email || !password) {
+        console.log('Erro: Email ou senha vazios');
         reject(new Error('Email e senha são obrigatórios'));
         return;
       }
@@ -34,6 +47,7 @@ export class AuthService {
       // Validação de email
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
+        console.log('Erro: Formato de email inválido');
         reject(new Error('Formato de email inválido'));
         return;
       }
@@ -47,18 +61,30 @@ export class AuthService {
             { email: 'test@test.com', password: '123456', name: 'Teste' }
           ];
 
-          const user = users.find(u => u.email === email && u.password === password);
-          const success = !!user;
+          console.log('Usuários disponíveis:', users);
           
-          if (success && isPlatformBrowser(this.platformId)) {
-            const userName = user!.name;
+          const user = users.find(u => {
+            console.log(`Comparando: ${u.email} === ${email} && ${u.password} === ${password}`);
+            return u.email === email && u.password === password;
+          });
+          
+          console.log('Usuário encontrado:', user);
+          
+          if (user && isPlatformBrowser(this.platformId)) {
+            console.log('Login bem-sucedido! Salvando no localStorage...');
+            const userName = user.name;
             localStorage.setItem('loggedInUser', email);
             localStorage.setItem('userName', userName);
             this.isLoggedInSubject.next(true);
             this.userNameSubject.next(userName);
+            console.log('Estado atualizado com sucesso');
+            resolve(true);
+          } else {
+            console.log('Login falhou - usuário não encontrado ou não é browser');
+            resolve(false);
           }
-          resolve(success);
         } catch (error) {
+          console.error('Erro no login:', error);
           reject(new Error('Erro interno do servidor'));
         }
       }, 1000);
@@ -87,7 +113,23 @@ export class AuthService {
     if (!isPlatformBrowser(this.platformId)) {
       return false;
     }
-    return this.isLoggedInSubject.value;
+    
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    const currentState = this.isLoggedInSubject.value;
+    
+    // Sincroniza o estado com o localStorage se houver divergência
+    if (loggedInUser && !currentState) {
+      const userName = localStorage.getItem('userName') || '';
+      this.isLoggedInSubject.next(true);
+      this.userNameSubject.next(userName);
+      return true;
+    } else if (!loggedInUser && currentState) {
+      this.isLoggedInSubject.next(false);
+      this.userNameSubject.next('');
+      return false;
+    }
+    
+    return currentState;
   }
 
   getUserName(): string {

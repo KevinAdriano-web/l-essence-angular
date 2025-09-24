@@ -106,6 +106,19 @@
     }
 }
 
+.btn-test {
+    background-color: #28a745;
+    border: 1px solid #28a745;
+    color: white;
+    margin-top: 10px;
+    transition: background-color 0.5s;
+
+    &:hover {
+        background-color: #218838;
+        border: 1px solid #218838;
+    }
+}
+
 .first-content {
     display: flex;
 }
@@ -174,6 +187,26 @@
     font-size: 14px;
     margin-top: 10px;
     text-align: center;
+}
+
+.example-users {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    text-align: center;
+    border: 1px solid #dee2e6;
+    
+    p {
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: #007cc9;
+    }
+    
+    small {
+        color: #6c757d;
+        line-height: 1.4;
+    }
 }
 
 @media screen and (max-width: 1040px) {
